@@ -2,6 +2,7 @@ package com.financeapp.newsfeed.service;
 
 import com.financeapp.newsfeed.model.NewsArticle;
 import jakarta.mail.MessagingException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,9 @@ import java.util.List;
 public class SchedulerService {
     private final MailService mailService;
     private final NewsService newsService;
+
+    @Value("${MAIL_FROM_ADDRESS}")
+    private String fromAddress;
 
     public SchedulerService(MailService mailService, NewsService newsService) {
         this.mailService = mailService;
@@ -30,7 +34,7 @@ public class SchedulerService {
 
         try {
             mailService.sendNewsSummary(
-                    "bikashshah15b@gmail.com",
+                    fromAddress,
                     "📩 Daily Finance News Summary",
                     summary
             );
