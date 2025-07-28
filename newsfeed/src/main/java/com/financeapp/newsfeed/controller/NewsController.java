@@ -4,6 +4,7 @@ import com.financeapp.newsfeed.model.NewsArticle;
 import com.financeapp.newsfeed.service.MailService;
 import com.financeapp.newsfeed.service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,9 @@ public class NewsController {
     @Autowired
     private MailService mailService;
 
+    @Value("${MAIL_FROM_ADDRESS}")
+    private String fromAddress;
+
     @GetMapping("/email")
     public ResponseEntity<String> sendNewsSummaryEmail() {
         List<String> keywords = Arrays.stream(newsService.getKeywordList().split(","))
@@ -37,7 +41,7 @@ public class NewsController {
 
         try {
             mailService.sendNewsSummary(
-                    "bikashshah15b@gmail.com",
+                    fromAddress,
                     "📩 Daily Finance News Summary",
                     summary
             );
